@@ -5,7 +5,6 @@ lazy val root = project
   .settings(
     organization := "com.boresjo",
     name := "play-lang",
-    version := "0.1.0-SNAPSHOT",
 
     scalaVersion := scala3Version,
 

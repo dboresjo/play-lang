@@ -1,0 +1,1 @@
+addSbtPlugin("com.github.sbt" % "sbt-autoversion" % "2.2.0")
