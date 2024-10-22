@@ -1,6 +1,6 @@
 package com.boresjo.play.lang
 
-import PlayLang.ENGLISH
+import MessageInterpolator.ENGLISH
 import play.api.i18n.{Lang, MessagesApi}
 
 import java.text.MessageFormat
@@ -8,14 +8,14 @@ import java.util.Locale
 import javax.inject.*
 import scala.collection.immutable
 
-object PlayLang {
-  val ENGLISH = Lang(Locale.ENGLISH)
+object MessageInterpolator {
+  val ENGLISH: Lang = Lang(Locale.ENGLISH)
 }
 
 @Singleton
-class PlayLang @Inject()(messagesApi: MessagesApi) {
+class MessageInterpolator @Inject()(messagesApi: MessagesApi) {
 
-  private lazy val mapbacks: Map[String, Map[String, String]] = messagesApi.messages.mapValues { _.map { case (n,v) => (v, n) } }.toMap
+  private lazy val mapbacks: Map[String, Map[String, String]] = messagesApi.messages.view.mapValues { _.map { case (n,v) => (v, n) } }.toMap
   private def messagesForLang(lang: Lang): Map[String, String] = messagesApi.messages(lang.language)
 
   def messageText(lang: Lang)(messageName: String): String = messagesForLang(lang).getOrElse(messageName, throw RuntimeException(s"No $language mapping for \"$messageName\""))
@@ -40,7 +40,7 @@ class PlayLang @Inject()(messagesApi: MessagesApi) {
     def en(args: Any*)(using lang: Lang): String = interpolator(sc)(ENGLISH, lang, args*)
   }
 
-  def interpolator(sc: StringContext)(from: Lang, to: Lang, args: Any*) = {
+  def interpolator(sc: StringContext)(from: Lang, to: Lang, args: Any*): String = {
     val text: String = {
       val parts = sc.parts.toSeq
       parts.head + parts.tail.zipWithIndex.map { (v, i) => s"{$i}$v" }.mkString
@@ -50,5 +50,4 @@ class PlayLang @Inject()(messagesApi: MessagesApi) {
 
     MessageFormat.format(pattern, args *)
   }
-
 }

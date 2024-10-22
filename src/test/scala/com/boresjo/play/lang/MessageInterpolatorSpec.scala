@@ -1,11 +1,11 @@
 package com.boresjo.play.lang
 
-import com.boresjo.play.lang.PlayLang.ENGLISH
+import com.boresjo.play.lang.MessageInterpolator.ENGLISH
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers.shouldBe
 import play.api.i18n.{DefaultMessagesApi, Lang}
 
-class PlayLangSpec extends AnyFreeSpec {
+class MessageInterpolatorSpec extends AnyFreeSpec {
   private val WELSH = Lang("cy")
 
   "Lang's" - {
@@ -16,7 +16,7 @@ class PlayLangSpec extends AnyFreeSpec {
           "feline" -> "Cat"
         )
       ))
-      given PlayLang(messagesApi)
+      given MessageInterpolator(messagesApi)
 
       "fetches message text from the repository" in {
         given Lang = ENGLISH
@@ -38,7 +38,7 @@ class PlayLangSpec extends AnyFreeSpec {
         "en" -> Map("a.message.name" -> "Dog {0}, Cat {1}"),
         "cy" -> Map("a.message.name" -> "Cath {1}, Ci {0}")
       ))
-      given PlayLang(messagesApi)
+      given MessageInterpolator(messagesApi)
 
       "interpolates a variable" in {
         given Lang = WELSH
@@ -53,7 +53,7 @@ class PlayLangSpec extends AnyFreeSpec {
         "en" -> Map("a.message.name" -> "Dog {1}, Cat {0}"),
         "cy" -> Map("a.message.name" -> "Cath {0}, Ci {1}")
       ))
-      given playLang: PlayLang = PlayLang(messagesApi)
+      given playLang: MessageInterpolator = MessageInterpolator(messagesApi)
 
       extension (sc: StringContext) {
         def cy(args: Any*)(using lang: Lang): String = playLang.interpolator(sc)(WELSH, lang, args *)
